@@ -10,60 +10,60 @@ The system integrates embedded hardware with a client-server software architectu
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│  PHYSICAL LAYER                                            │
-│                                                            │
+│  PHYSICAL LAYER                                           │
+│                                                           │
 │  Finder 6M Energy Analyzers × 3                           │
 │  (Modbus addresses: 2, 3, 7)                              │
-│  Sensors: Voltage, Current, Power Factor, THD,             │
-│           Energy (pos/neg), Frequency                      │
+│  Sensors: Voltage, Current, Power Factor, THD,            │
+│           Energy (pos/neg), Frequency                     │
 └──────────────────┬────────────────────────────────────────┘
                    │ Modbus RS485
 ┌──────────────────▼────────────────────────────────────────┐
 │  EMBEDDED LAYER — Arduino Opta PLC (ARM Cortex-M7)        │
-│                                                            │
-│  ┌─────────────────────┐  ┌──────────────────────┐        │
-│  │ sensor_acquisition   │  │ timestamp_encoder    │        │
-│  │ .ino                 │  │ .ino                 │        │
-│  │                      │  │                      │        │
-│  │ • Modbus polling     │  │ • NTP time sync      │        │
-│  │ • 10s auto-baseline  │  │ • Date+time → hex    │        │
-│  │ • Threshold alerting │  │ • JSON transmission   │        │
-│  │ • Float → hex encode │  │                      │        │
-│  │ • HTTP POST to server│  │                      │        │
-│  └─────────────────────┘  └──────────────────────┘        │
-│                                                            │
-│  ┌─────────────────────┐                                   │
-│  │ web_config_interface │                                   │
-│  │ .ino                 │                                   │
-│  │                      │                                   │
-│  │ • 8 input configs    │                                   │
-│  │ • 16 device addresses│                                   │
-│  │ • EEPROM persistence │                                   │
-│  │ • HTML/JS interface  │                                   │
-│  └─────────────────────┘                                   │
+│                                                           │
+│  ┌──────────────────────┐  ┌──────────────────────┐       │
+│  │ sensor_acquisition   │  │ timestamp_encoder    │       │
+│  │ .ino                 │  │ .ino                 │       │
+│  │                      │  │                      │       │
+│  │ • Modbus polling     │  │ • NTP time sync      │       │
+│  │ • 10s auto-baseline  │  │ • Date+time → hex    │       │
+│  │ • Threshold alerting │  │ • JSON transmission  │       │
+│  │ • Float → hex encode │  │                      │       │
+│  │ • HTTP POST to server│  │                      │       │
+│  └──────────────────────┘  └──────────────────────┘       │
+│                                                           │
+│  ┌──────────────────────┐                                 │
+│  │ web_config_interface │                                 │
+│  │ .ino                 │                                 │
+│  │                      │                                 │
+│  │ • 8 input configs    │                                 │
+│  │ • 16 device addresses│                                 │
+│  │ • EEPROM persistence │                                 │
+│  │ • HTML/JS interface  │                                 │
+│  └──────────────────────┘                                 │
 └──────────────────┬────────────────────────────────────────┘
                    │ Ethernet (HTTP POST)
-┌──────────────────▼────────────────────────────────────────┐
+┌──────────────────▼─────────────────────────────────────────┐
 │  SERVER LAYER — Flask (Python)                             │
 │                                                            │
 │  • Hex payload decoding                                    │
 │  • Parameter visualization                                 │
 │  • Threshold-triggered email alerts                        │
 │  • Data logging                                            │
-└───────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────┘
 ```
 
 ## Firmware Modules
 
-### `sensor_acquisition.ino` — Core Data Acquisition & Alerting
+### `sensor_acquisition.ino` - Core Data Acquisition & Alerting
 The main firmware module. Polls three Finder 6M analyzers via Modbus at continuous sampling rates, applies automatic baseline calibration during the first 10 seconds, and monitors sensor values against configurable tolerance thresholds. Data is encoded as IEEE 754 hexadecimal for compact RS485 transmission. Alerts trigger immediate data transmission to the server.
 
 **Monitored parameters per analyzer:** Voltage RMS, Current RMS, Active/Reactive/Apparent Power, Power Factor, Frequency, THD, Positive/Negative Energy.
 
-### `timestamp_encoder.ino` — NTP Time Synchronization & Hex Encoding
+### `timestamp_encoder.ino` - NTP Time Synchronization & Hex Encoding
 Acquires real-time timestamps from NTP servers (pool.ntp.org, GMT+3), encodes date (DDMMYY) and time (HHMMSS) as hexadecimal integers, and transmits the combined timestamp as JSON to the Flask server.
 
-### `web_config_interface.ino` — Remote Configuration Interface
+### `web_config_interface.ino` - Remote Configuration Interface
 Serves an embedded HTML/JavaScript web interface for remote configuration of input types (Counter/Analog/PWM), Modbus device assignments (Analyzer/Temperature/Pressure), and per-device alert thresholds (min/max for Watt, Voltage, Current). All settings are persisted in EEPROM.
 
 ## Hardware
@@ -88,13 +88,13 @@ Serves an embedded HTML/JavaScript web interface for remote configuration of inp
 
 ## Dependencies (Arduino Libraries)
 
-- `Finder6M` — Finder energy analyzer Modbus driver
-- `Ethernet` / `EthernetUdp` — W5500 networking
-- `ArduinoHttpClient` — HTTP client for POST requests
-- `ArduinoJson` — JSON serialization
-- `NTPClient` / `TimeLib` — NTP time synchronization
-- `EEPROM` — Persistent configuration storage
+- `Finder6M` - Finder energy analyzer Modbus driver
+- `Ethernet` / `EthernetUdp` - W5500 networking
+- `ArduinoHttpClient` - HTTP client for POST requests
+- `ArduinoJson` - JSON serialization
+- `NTPClient` / `TimeLib` - NTP time synchronization
+- `EEPROM` - Persistent configuration storage
 
 ## Results
 
-The full pipeline was validated on a real-time demo setup, confirming end-to-end functionality from sensor acquisition to automated alerting. Post-internship, Canovate deployed the system on industrial manufacturing equipment, extending it with real-time carbon footprint computation compliant with European standards, enabling the company to qualify for EU-market industrial projects.
+The full pipeline was validated on a real-time demo setup, confirming end-to-end functionality from sensor acquisition to automated alerting.
