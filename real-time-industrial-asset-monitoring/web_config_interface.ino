@@ -1,6 +1,4 @@
-// ============================================================================
 // web_config_interface.ino — Web-Based Parameter Configuration Interface
-// ============================================================================
 //
 // Serves an embedded web interface on the Arduino Opta PLC for remote
 // configuration of sensor parameters and alert thresholds.
@@ -14,12 +12,7 @@
 //   - EEPROM persistence: all settings survive power cycles
 //   - Real-time form validation with JavaScript
 //   - Success confirmation messages
-//
-// The interface enables operators to remotely adjust monitoring thresholds
-// without reflashing the firmware.
-//
-// Author : Yunus Emre Kılıçkıran
-// ============================================================================
+
 
 #include <SPI.h>
 #include <Ethernet.h>
@@ -61,7 +54,6 @@ byte device_type;
 // Bytes 160-175: maxCurrentArray
 // Byte  176:     device_type
 
-// ============================================================================
 
 void setup() {
     Serial.begin(9600);
@@ -90,9 +82,8 @@ void setup() {
     EEPROM.get(176, device_type);
 }
 
-// ============================================================================
+
 // REQUEST HANDLING
-// ============================================================================
 
 void processInputConfig(String &request) {
     if (request.indexOf("inputSelect=") < 0 || request.indexOf("typeSelect=") < 0)
@@ -157,9 +148,8 @@ void processDeviceConfig(String &request) {
     showSuccessMessage = true;
 }
 
-// ============================================================================
+
 // HTML INTERFACE
-// ============================================================================
 
 void serveHTML(EthernetClient &client) {
     client.println("HTTP/1.1 200 OK");
@@ -218,9 +208,8 @@ void serveHTML(EthernetClient &client) {
     client.println("</body></html>");
 }
 
-// ============================================================================
+
 // MAIN LOOP
-// ============================================================================
 
 void loop() {
     EthernetClient client = server.available();
