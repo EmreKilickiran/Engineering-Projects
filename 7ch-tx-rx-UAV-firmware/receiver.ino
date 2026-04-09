@@ -1,6 +1,4 @@
-// ============================================================================
 // receiver.ino — 6-Channel Wireless RC Receiver with Failsafe
-// ============================================================================
 //
 // Receives control packets from the transmitter via NRF24L01+, converts
 // each channel to standard RC PWM signals (1000-2000 µs), and drives
@@ -15,9 +13,7 @@
 //   D4 → Throttle   D7 → Aux2
 //
 // Hardware: Arduino Nano + NRF24L01+ (CE=9, CSN=10) + 6× Servo
-//
-// Author : Yunus Emre Kılıçkıran
-// ============================================================================
+
 
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -57,7 +53,6 @@ void ResetData() {
     data.aux2     = 127;
 }
 
-// ============================================================================
 
 void setup() {
     // Attach servos to PWM output pins
