@@ -1,6 +1,4 @@
-// ============================================================================
 // timestamp_encoder.ino — NTP Timestamp Acquisition & Hex Encoding
-// ============================================================================
 //
 // Acquires real-time timestamps via NTP (pool.ntp.org), encodes date and time
 // into compact hexadecimal format, and transmits as JSON to the Flask server.
@@ -9,11 +7,7 @@
 //   Date: DDMMYY → hex (e.g., 140824 → 0x22628)
 //   Time: HHMMSS → hex (e.g., 144245 → 0x23375)
 //   Combined: date_hex + time_hex as a single string
-//
-// This compact encoding reduces payload size for RS485 serial transmission.
-//
-// Author : Yunus Emre Kılıçkıran
-// ============================================================================
+
 
 #include <SPI.h>
 #include <Ethernet.h>
