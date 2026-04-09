@@ -1,6 +1,6 @@
 # Real-Time Signal Processing and Embedded Control Algorithms for a Custom UAV
 
-Custom firmware in C for a 7-channel RC aircraft control system, implementing real-time PWM signal processing and wireless communication on Arduino. Self-directed independent engineering project (2022–2023).
+Custom firmware in C for a 7-channel RC aircraft control system, implementing real-time PWM signal processing and wireless communication on Arduino. Self-directed independent engineering project.
 
 ## Overview
 
