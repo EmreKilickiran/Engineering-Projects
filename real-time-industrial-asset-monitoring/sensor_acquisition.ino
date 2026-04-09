@@ -1,11 +1,4 @@
-// ============================================================================
 // sensor_acquisition.ino — Real-Time Sensor Data Acquisition & Alert System
-// ============================================================================
-//
-// Core firmware for the Arduino Opta PLC. Reads current, voltage, and
-// temperature sensor data from three Finder 6M energy analyzers via Modbus
-// protocol at continuous sampling rates.
-//
 // Features:
 //   1. Multi-analyzer Modbus polling (3 analyzers at addresses 2, 3, 7)
 //   2. Automatic baseline calibration (10-second startup averaging)
@@ -25,10 +18,6 @@
 //   - Arduino Opta PLC (ARM Cortex-M7)
 //   - Finder 6M energy analyzers × 3 (Modbus RS485)
 //   - Ethernet (W5500) for server communication
-//
-// Author : Yunus Emre Kılıçkıran
-// Context: Canovate Electronics, R&D Internship (Aug–Sep 2024)
-// ============================================================================
 
 #include <Finder6M.h>
 #include <Ethernet.h>
@@ -38,9 +27,8 @@
 #include <Wire.h>
 #include <NTPClient.h>
 
-// ============================================================================
+
 // CONFIGURATION
-// ============================================================================
 
 // --- Network ----------------------------------------------------------------
 byte mac[] = { 0xA8, 0x61, 0x0A, 0x50, 0x8B, 0x4F };
@@ -67,9 +55,8 @@ unsigned long startMillis;
 const long TRANSMIT_INTERVAL = 1000;   // Normal transmission interval (ms)
 const long CALIBRATION_PERIOD = 10000; // Baseline calibration period (ms)
 
-// ============================================================================
+
 // ANALYZER DATA STRUCTURE
-// ============================================================================
 // Holds accumulated readings, baseline values, tolerance thresholds,
 // and alert states for each energy analyzer.
 
@@ -109,9 +96,8 @@ struct AnalyzerData {
 
 AnalyzerData analyzer1, analyzer2, analyzer3;
 
-// ============================================================================
+
 // INITIALIZATION
-// ============================================================================
 
 void setupAnalyzer(Finder6M &f6m, uint8_t address) {
     if (!f6m.init()) { while (1); }
@@ -137,9 +123,8 @@ void setup() {
     startMillis = millis();
 }
 
-// ============================================================================
+
 // SENSOR PROCESSING & THRESHOLD ALERTING
-// ============================================================================
 // During the first 10 seconds (calibration phase), computes running averages
 // to establish baseline values. After calibration, each reading is compared
 // against the baseline ± tolerance. If any parameter exceeds its threshold,
@@ -208,9 +193,8 @@ void processAnalyzer(Finder6M &f6m, AnalyzerData &data, uint8_t address) {
     }
 }
 
-// ============================================================================
+
 // HEXADECIMAL ENCODING & TRANSMISSION
-// ============================================================================
 // Encodes IEEE 754 float values into compact hexadecimal strings for
 // RS485 serial transmission, minimizing payload size. Each analyzer's
 // readings (11 parameters) are concatenated into a single hex stream.
@@ -277,9 +261,8 @@ void resetAnalyzerData(AnalyzerData &a) {
     a.count = 0;
 }
 
-// ============================================================================
+
 // MAIN LOOP
-// ============================================================================
 
 void loop() {
     // Poll all three analyzers
