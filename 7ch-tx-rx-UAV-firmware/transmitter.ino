@@ -1,6 +1,4 @@
-// ============================================================================
 // transmitter.ino — 6-Channel Wireless RC Transmitter
-// ============================================================================
 //
 // Reads 6 analog inputs (4 joystick axes + 2 auxiliary potentiometers),
 // maps them to calibrated 0-255 PWM range with configurable direction,
@@ -11,9 +9,7 @@
 //
 // Hardware: Arduino Nano + NRF24L01+ (CE=9, CSN=10)
 // Channels: Throttle (A0), Yaw (A1), Pitch (A2), Roll (A3), Aux1 (A6), Aux2 (A7)
-//
-// Author : Yunus Emre Kılıçkıran
-// ============================================================================
+
 
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -45,9 +41,8 @@ void ResetData() {
     data.aux2     = 127;   // Center
 }
 
-// ============================================================================
+
 // Joystick Calibration
-// ============================================================================
 // Maps raw ADC values (0-1023) to 0-255 with dead-zone handling around
 // the mechanical center point. Supports direction reversal per channel.
 
@@ -60,7 +55,6 @@ int mapJoystickValues(int val, int lower, int middle, int upper, bool reverse) {
     return reverse ? 255 - val : val;
 }
 
-// ============================================================================
 
 void setup() {
     radio.begin();
